@@ -114,7 +114,25 @@ class merkleMaker(threading.Thread):
 		cbtxn = self.makeCoinbaseTxn(subsidy, False)
 		cbtxn.assemble()
 		return MerkleTree([cbtxn])
-	
+
+        def updateAuxMerkle(self):
+                self.curClearMerkleTree = self.createClearMerkleTree(1)
+                self.clearMerkleRoots = Queue(self.WorkQueueSizeClear[1])
+
+                self.nextMerkleTree = self.createClearMerkleTree(2)
+                self.nextMerkleRoots = Queue(self._MaxClearSize)
+
+                self.currentMerkleTree = self.curClearMerkleTree
+                self.merkleRoots.clear()
+
+                self.ready = True
+                with self.readyCV:
+                        self.readyCV.notify_all()
+
+                self.needMerkle = 2
+                self.onBlockChange()
+
+
 	def updateBlock(self, newBlock, height = None, bits = None, _HBH = None):
 		if newBlock == self.currentBlock[0]:
 			if height in (None, self.currentBlock[1]) and bits in (None, self.currentBlock[2]):
