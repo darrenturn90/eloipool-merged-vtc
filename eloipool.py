@@ -881,6 +881,7 @@ if __name__ == "__main__":
 	server.tls = threading.local()
 	server.tls.wantClear = False
 	server.loggers = loggersShare
+	server.MM = MM
 	if hasattr(config, 'JSONRPCAddress'):
 		logging.getLogger('backwardCompatibility').warn('JSONRPCAddress configuration variable is deprecated; upgrade to JSONRPCAddresses list before 2013-03-05')
 		if not hasattr(config, 'JSONRPCAddresses'):
